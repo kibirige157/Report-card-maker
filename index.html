@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>staffLogin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2b46;--teal:#0e7c7b;--teal-dark:#0a5f5e;--gold:#e0a84b;
+  --bg:#f4f6f9;--text:#172033;--muted:#667085;--border:#d7dde6;--error:#b42318;--success:#067647;
+}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+
+.wrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+
+/* Brand panel */
+.brand{background:var(--navy);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.brand::after{content:"";position:absolute;width:520px;height:520px;right:-220px;bottom:-220px;border-radius:50%;border:70px solid rgba(255,255,255,.04)}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;position:relative;z-index:1}
+.logo-mark{width:90px;height:90px;border-radius:10px;background:#fff;padding:6px;display:grid;place-items:center;}
+.logo-mark img{width:100%;height: 100%;object-fit: contain;}
+.brand-body{position:relative;z-index:1;max-width:420px}
+.brand h2{font-size:38px;line-height:1.15;font-weight:700;letter-spacing:-.02em}
+.brand p{margin-top:16px;color:#b8c7d9;font-size:16px;line-height:1.6}
+.brand-foot{position:relative;z-index:1;color:#8ea3bb;font-size:13px}
+
+/* Form panel */
+.panel{display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.card{width:100%;max-width:400px;animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h1{font-size:28px;font-weight:700;letter-spacing:-.01em;color:var(--navy)}
+.card .lead{margin-top:8px;color:var(--muted);font-size:15px;line-height:1.5}
+
+form{margin-top:32px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.control{position:relative}
+.icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
+
+select,input[type=password],input[type=text]{width:100%;height:48px;font:inherit;font-size:15px;color:var(--text);
+  background:#fff;border:1px solid var(--border);border-radius:10px;padding:0 14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input[type=password]{padding-left:44px;padding-right:64px}
+select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-left:44px;padding-right:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%23667085' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center}
+select:invalid{color:var(--muted)}
+input::placeholder{color:#98a2b3}
+select:focus,input:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(14,124,123,.14)}
+
+.toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);height:36px;padding:0 10px;border:0;background:none;
+  border-radius:8px;color:var(--muted);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.toggle:hover{color:var(--navy);background:#eef2f6}
+
+.options{display:flex;align-items:center;margin:4px 0 26px;font-size:14px}
+.check{display:flex;align-items:center;gap:8px;color:var(--muted);cursor:pointer;user-select:none}
+.check input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer}
+
+.submit{width:100%;height:50px;border:0;border-radius:10px;background:var(--teal);color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:background .2s,transform .1s}
+.submit:hover{background:var(--teal-dark)}
+.submit:active{transform:translateY(1px)}
+
+button:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.status{min-height:22px;margin-top:18px;font-size:14px;font-weight:500;text-align:center}
+.status.error{color:var(--error)}
+.status.success{color:var(--success)}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+
+.hint{margin-top:28px;padding:14px 16px;border-radius:10px;background:#eef6f6;color:#355b5b;font-size:13px;line-height:1.55}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <aside class="brand">
+    <div class="logo">
+      <div class="logo-mark">
+        <img src="school logo.jpg" alt="School logo">
+      </div>
+      <center>
+      ST MARK HIGH SCHOOL<br>
+      Giving Your Child a bright future
+    </center>
+    </div>
+    <div class="brand-body">
+      <h2>Staff portal</h2>
+    <p>Secure access for administrators and teachers. Sign in with your role and password to manage classes, records.</p>
+    </div>
+    <div class="brand-foot">&copy; <span id="year"></span>  St Mark High School</div>
+  </aside>
+
+  <section class="panel">
+    <div class="card" id="card">
+      <h1>Sign in</h1>
+      <p class="lead">Select your role and enter your password to continue.</p>
+
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="role">Role</label>
+          <div class="control">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            <select id="role">
+              <option value="" disabled selected>Choose your role</option>
+              <option value="Administration">Administration</option>
+              <option value="Teacher">Teacher</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="control">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <input type="password" id="password" placeholder="Enter your password">
+            <button type="button" class="toggle" id="toggle" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <div class="options">
+          <label class="check"><input type="checkbox" id="remember" checked> Remember me on this device</label>
+        </div>
+
+        <button class="submit" type="submit">Sign in</button>
+      </form>
+
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+
+      <div class="hint">Your first sign-in for a role saves that password on this device. Later sign-ins for the same role must use the saved password.</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MASTER_PASSWORD = "jamil123";   // opens the site for any role
+const NEXT_PAGE = "home.html";   // change to your other page's file name
+const STORE_KEY = "staffLogin.v1";
+const SESSION_KEY = "staffSession";
+
+const $ = id => document.getElementById(id);
+$("year").textContent = new Date().getFullYear();
+
+const store = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+
+async function sha256(text){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function setStatus(text, type){
+  $("status").className = "status " + type;
+  $("status").textContent = text;
+}
+
+function fail(text){
+  setStatus(text, "error");
+  $("card").classList.remove("shake");
+  void $("card").offsetWidth;
+  $("card").classList.add("shake");
+}
+
+$("toggle").addEventListener("click", () => {
+  const p = $("password");
+  const show = p.type === "password";
+  p.type = show ? "text" : "password";
+  $("toggle").textContent = show ? "Hide" : "Show";
+  $("toggle").setAttribute("aria-label", show ? "Hide password" : "Show password");
+});
+
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const role = $("role").value;
+  const pw = $("password").value;
+
+  if(!role) return fail("Please choose your role.");
+  if(!pw) return fail("Please enter your password.");
+
+  const hash = await sha256(pw);
+  const isMaster = pw === MASTER_PASSWORD;
+
+  if(!isMaster){
+    if(!store[role]){
+      store[role] = hash;                          // first sign-in: keep this password for the role
+    } else if(store[role] !== hash){
+      return fail("That password does not match this role.");
+    }
+  }
+
+  localStorage.setItem(STORE_KEY, JSON.stringify(store)); // stored as hashes only
+  const session = JSON.stringify({ role, at: Date.now() });
+  if($("remember").checked){
+    localStorage.setItem(SESSION_KEY, session);
+  } else {
+    sessionStorage.setItem(SESSION_KEY, session);
+  }
+
+  setStatus("Signed in as " + role + ". Redirecting...", "success");
+  setTimeout(() => { location.href = NEXT_PAGE; }, 700);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reports | St Mark High School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Lora:wght@500;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2b46;--navy-2:#16395c;--gold:#e0a84b;--teal:#0e7c7b;--teal-dark:#0a5f5e;--teal-soft:#e6f3f3;
+  --bg:#f4f6f9;--card:#ffffff;--text:#172033;--muted:#667085;--border:#e3e8ef;--border-strong:#cdd5e0;
+  --maroon:#7a1f23;--rc-navy:#2c3e50;--rc-text:#1f2430;--rc-line:#c9ced6;--rc-muted:#5b6472;
+  --serif:"Lora",Georgia,serif;--rc-sans:"Lato",Arial,sans-serif;--phone:"Times New Roman",Times,serif;
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid rgba(224,168,75,.7);outline-offset:2px}
+
+/* App shell */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{background:var(--navy);color:#b8c7d9;display:flex;flex-direction:column;padding:28px 18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:12px;padding:0 8px 28px}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:700;font-size:15px;flex:0 0 40px}
+.brand strong{display:block;color:#fff;font-size:15px;font-weight:700}
+.brand span{font-size:12px;color:#8ea3bb}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav a{display:flex;align-items:center;gap:12px;min-height:44px;padding:10px 14px;border-radius:10px;font-weight:500;color:#b8c7d9;position:relative;transition:background .15s,color .15s}
+.nav a svg{width:18px;height:18px;flex:0 0 18px}
+.nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav a.on{background:var(--navy-2);color:#fff}
+.nav a.on::before{content:"";position:absolute;left:-18px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--gold)}
+.side-foot{margin-top:auto;padding:18px 8px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:#8ea3bb}
+
+main{min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:22px 40px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.topbar h1{font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.01em}
+.topbar p{color:var(--muted);font-size:13px;margin-top:2px}
+.date{font-size:13px;color:var(--muted);background:var(--bg);padding:8px 14px;border-radius:999px;white-space:nowrap}
+.content{padding:28px 40px 56px;max-width:1200px;width:100%}
+
+.btn{height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--border-strong);background:#fff;color:var(--navy);font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;transition:background .15s}
+.btn:hover{background:var(--bg)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.primary:hover{background:var(--teal-dark)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Selection bar */
+.picker{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;margin-bottom:22px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:180px}
+.field label{font-size:13px;font-weight:600;color:var(--navy)}
+select{height:42px;border:1px solid var(--border-strong);border-radius:8px;padding:0 36px 0 12px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%23667085' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;-webkit-appearance:none;appearance:none;cursor:pointer;font-size:14px;color:var(--text)}
+select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,123,.15)}
+.picker .hint{font-size:13px;color:var(--muted);flex:1;min-width:220px;padding-bottom:10px}
+
+/* Waiting and empty states */
+.state{background:var(--card);border:1px dashed var(--border-strong);border-radius:14px;padding:50px 30px;text-align:center;color:var(--muted)}
+.state strong{display:block;color:var(--navy);font-size:16px;margin-bottom:6px}
+
+.viewer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.viewer-head h2{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--navy)}
+.viewer-head p{color:var(--muted);font-size:13.5px;margin-top:2px}
+
+/* Report card */
+.cards{display:flex;flex-direction:column;gap:28px;align-items:center}
+.rc{width:100%;max-width:816px;background:#fff;color:var(--rc-text);font-family:var(--rc-sans);box-shadow:0 2px 10px rgba(15,43,70,.10);border:1px solid #e4e7ec;display:flex;flex-direction:column}
+.rc-top{display:flex;align-items:stretch;justify-content:space-between;margin:24px 24px 0}
+.rc-title{flex:1;background:var(--maroon);color:#fff;font-family:var(--serif);font-weight:700;font-size:30px;padding:18px 26px;letter-spacing:.2px;line-height:1.2;display:flex;align-items:center}
+.rc-badge{width:250px;background:var(--rc-navy);color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 18px;flex:0 0 250px}
+.rc-badge .rc-mark{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--rc-navy);display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:14px;flex:0 0 38px}
+.rc-badge b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.5px}
+.rc-badge small{display:block;font-size:12px;letter-spacing:4px;text-transform:uppercase;color:#d7dee8}
+.rc-body{padding:20px 24px 0;display:flex;flex-direction:column;gap:16px}
+.sec{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--rc-navy)}
+.infos{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+.infos label{display:block;font-size:13.5px;font-weight:700;color:var(--rc-text);margin-bottom:6px}
+.infos .box{height:40px;border:1px solid var(--rc-line);padding:0 12px;display:flex;align-items:center;font-size:14.5px;color:var(--rc-text);background:#fff}
+table.grades{width:100%;border-collapse:collapse;font-size:14px}
+table.grades th{background:var(--maroon);color:#fff;font-weight:700;text-align:left;padding:10px 12px;border:1px solid var(--maroon)}
+table.grades th.c{text-align:center}
+table.grades td{padding:9px 12px;border:1px solid var(--rc-line);color:var(--rc-text)}
+table.grades td.c{text-align:center;font-variant-numeric:tabular-nums}
+table.grades td.fg{text-align:center;font-weight:700}
+table.grades tbody tr:nth-child(even) td{background:#fbfbfc}
+.sum{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--rc-muted);margin-top:-4px}
+.sum b{color:var(--rc-text)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.two ul{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.two li b{color:var(--rc-text)}
+.comment{border:1px solid var(--rc-line);padding:12px 14px;min-height:96px;font-size:14px;line-height:1.6;color:var(--rc-text)}
+.sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px;text-align:center}
+.sigs h4{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--rc-text)}
+.sigline{height:56px;border-bottom:1px solid var(--rc-text);margin:8px 10px 6px}
+.sigs small{display:block;font-size:13.5px;font-weight:700;color:var(--rc-text);min-height:18px}
+.rc-foot{margin:22px 24px 0;padding:12px 0;border-top:2px solid var(--rc-navy);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--rc-muted)}
+.phone{font-family:var(--phone);font-size:14px;color:var(--rc-text)}
+.rc-bar{height:22px;background:var(--rc-navy);margin-top:14px}
+.rc-actions{width:100%;max-width:816px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);padding:10px 0 0}
+
+footer{padding:18px 40px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--card)}
+
+/* Responsive */
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 16px}
+  .brand{padding:0}
+  .brand span,.side-foot{display:none}
+  .nav{flex-direction:row;overflow-x:auto;flex:1;min-width:0;gap:2px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{white-space:nowrap;min-height:40px;padding:8px 12px}
+  .nav a.on::before{display:none}
+  .nav a.on{box-shadow:inset 0 -3px 0 var(--gold)}
+  .topbar{padding-left:20px;padding-right:20px}
+  .content{padding:22px 16px 40px}
+  .rc-top{margin:16px 16px 0;flex-direction:column}
+  .rc-badge{width:auto;flex:none}
+  .rc-body{padding:18px 16px 0}
+  .rc-foot{margin:18px 16px 0}
+}
+@media (max-width:640px){
+  .topbar{padding-top:16px;padding-bottom:16px}
+  .topbar h1{font-size:19px}
+  .date{display:none}
+  .field{min-width:0;width:100%}
+  .picker .btn{width:100%;justify-content:center}
+  .rc-title{font-size:22px;padding:14px 16px}
+  .infos{grid-template-columns:1fr 1fr}
+  .infos > div:first-child{grid-column:1/-1}
+  .two{grid-template-columns:1fr}
+  .sigs{grid-template-columns:1fr;gap:16px}
+  .rc-foot{flex-direction:column}
+  table.grades{font-size:12.5px}
+  table.grades th,table.grades td{padding:7px 6px}
+  footer{flex-direction:column}
+}
+
+/* Printing: report cards only, one per page */
+@media print{
+  .side,.topbar,.picker,.viewer-head,.rc-actions,footer,.state{display:none!important}
+  .shell,main{display:block}
+  .content{padding:0;max-width:none}
+  body{background:#fff}
+  .cards{gap:0}
+  .rc{box-shadow:none;border:0;max-width:none;break-after:page;page-break-after:always}
+  .rc:last-child{break-after:auto;page-break-after:auto}
+  .rc-title,.rc-badge,.rc-bar,table.grades th,table.grades tbody tr:nth-child(even) td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4;margin:10mm}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark">SM</div><div><strong>St Mark High</strong><span>Report Card Maker</span></div></div>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="home.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+        Home
+      </a>
+      <a href="students.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20c0-2.6-1.6-4.6-4-5.5"/></svg>
+        Students
+      </a>
+      <a href="Grading.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>
+        Grades
+      </a>
+      <a href="Report.html" class="on" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        Reports
+      </a>
+      <a href="login.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Sign out
+      </a>
+    </nav>
+    <div class="side-foot">&copy; St Mark High School</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <h1>Reports</h1>
+        <p>Choose a class and term to view and print report cards.</p>
+      </div>
+      <div class="date" id="today"></div>
+    </header>
+
+    <div class="content">
+
+      <!-- Selection: nothing shows until a class and term are chosen -->
+      <section class="picker" aria-label="Choose class and term">
+        <div class="field">
+          <label for="formSel">Class</label>
+          <select id="formSel">
+            <option value="">Select a class</option>
+            <option value="1">Form 1</option><option value="2">Form 2</option><option value="3">Form 3</option>
+            <option value="4">Form 4</option><option value="5">Form 5</option><option value="6">Form 6</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="termSel">Term</label>
+          <select id="termSel">
+            <option value="">Select a term</option>
+            <option>Term 1</option><option>Term 2</option><option>Term 3</option>
+          </select>
+        </div>
+        <p class="hint">Results appear once you choose both. If a term has not been saved from the Grades page yet, nothing will show for it.</p>
+      </section>
+
+      <!-- Report cards for the chosen class and term -->
+      <section id="viewer" hidden>
+        <div class="viewer-head">
+          <div>
+            <h2 id="viewTitle"></h2>
+            <p id="viewMeta"></p>
+          </div>
+          <button class="btn primary" id="printAll" type="button">Print all cards</button>
+        </div>
+        <div class="cards" id="cards"></div>
+      </section>
+
+      <div class="state" id="waiting">
+        <strong>No class or term chosen</strong>
+        Choose a class and a term above to see its report cards.
+      </div>
+    </div>
+
+    <footer>
+      <span>&copy; St Mark High School</span>
+      <span>Report Card Maker</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   SCHOOL DETAILS (edit once; they appear on every report card)
+   ============================================================ */
+const SCHOOL = {
+  name: "St Mark High School",
+  badge1: "St Mark",
+  badge2: "High School",
+  address: "Plot 00, School Road, Kampala, Uganda",
+  phone: "0731544995",
+  email: "info@stmarkhigh.example",
+  academicYear: "2026/2027",
+  headTeacher: ""             // type the head teacher's name here
+};
+
+/* ============================================================
+   GRADE BANDS AND REMARKS (must match the Grades page)
+   ============================================================ */
+const BANDS = [
+  { min: 80, grade: "A", range: "80 to 100%", remark: "Excellent work. Keep it up." },
+  { min: 60, grade: "B", range: "60 to 79%", remark: "Very good progress. Aim higher." },
+  { min: 40, grade: "C", range: "40 to 59%", remark: "Good effort. More practice needed." },
+  { min: 0,  grade: "E", range: "Below 40%", remark: "Needs support. Please see the class teacher." }
+];
+const bandOf = v => BANDS.find(b => v >= b.min);
+
+/* ============================================================
+   SAVED RESULTS
+   These are written by the Grades page ("Save to reports").
+   They are kept on this computer until the database is connected.
+   ============================================================ */
+const REPORTS_KEY = "rc.reports";
+const readReports = () => { try { return JSON.parse(localStorage.getItem(REPORTS_KEY) || "[]"); } catch(e){ return []; } };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Build one class and term ----------
+   Each student's average is worked out for the chosen term only.
+   Positions are ranked within that class and term. */
+function buildClass(batch){
+  const subjects = batch.subjects || [];
+  const students = batch.rows.map(r => {
+    const scores = {};
+    subjects.forEach(sub => {
+      const v = r.scores ? r.scores[sub] : undefined;
+      if(typeof v === "number") scores[sub] = v;
+    });
+    const vals = Object.values(scores);
+    const total = vals.length ? vals.reduce((a, b) => a + b, 0) : null;
+    const avg = vals.length ? total / vals.length : null;
+    return { adm: r.adm, name: r.name, gender: r.gender, scores, total, avg };
+  });
+
+  const ranked = students.filter(s => s.avg !== null).map(s => s.avg);
+  students.forEach(s => {
+    s.position = s.avg === null ? null : 1 + ranked.filter(a => a > s.avg + 1e-9).length;
+  });
+  return { students, subjects, classSize: students.length };
+}
+
+function reportCard(batch, s, cls){
+  const band = s.avg === null ? null : bandOf(s.avg);
+  const rows = cls.subjects.map(sub => {
+    const v = s.scores[sub];
+    if(typeof v !== "number"){
+      return `<tr><td>${esc(sub)}</td><td class="c">&mdash;</td><td class="fg">&mdash;</td></tr>`;
+    }
+    return `<tr><td>${esc(sub)}</td><td class="c">${v}</td><td class="fg">${bandOf(v).grade}</td></tr>`;
+  }).join("");
+
+  const scale = BANDS.map(b => `<li><b>${b.grade}:</b> ${b.range}</li>`).join("");
+  const remark = band ? band.remark : "Results are not yet complete for this student.";
+  const avgText = s.avg === null ? "&mdash;" : s.avg.toFixed(1) + "%";
+
+  return `
+  <article class="rc">
+    <div class="rc-top">
+      <div class="rc-title">High School Report Card</div>
+      <div class="rc-badge">
+        <span class="rc-mark">SM</span>
+        <div><b>${esc(SCHOOL.badge1)}</b><small>${esc(SCHOOL.badge2)}</small></div>
+      </div>
+    </div>
+
+    <div class="rc-body">
+      <h3 class="sec">Student Information:</h3>
+      <div class="infos">
+        <div><label>Name:</label><div class="box">${esc(s.name)}</div></div>
+        <div><label>Grade:</label><div class="box">Form ${batch.form}</div></div>
+        <div><label>School Year:</label><div class="box">${esc(SCHOOL.academicYear)}</div></div>
+      </div>
+
+      <table class="grades">
+        <thead><tr><th>Subject</th><th class="c">${esc(batch.term)} Score</th><th class="c">Grade</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="sum">
+        <span>Average: <b>${avgText}</b></span>
+        <span>Position in class: <b>${s.position ?? "&mdash;"} of ${cls.classSize}</b></span>
+      </div>
+
+      <div class="two">
+        <div>
+          <h3 class="sec">Grading Scale:</h3>
+          <ul>${scale}</ul>
+        </div>
+        <div>
+          <h3 class="sec">Comments:</h3>
+          <div class="comment" style="margin-top:10px">${esc(remark)}</div>
+        </div>
+      </div>
+
+      <div class="sigs">
+        <div><h4>Parent's Signature:</h4><div class="sigline"></div><small></small></div>
+        <div><h4>Teacher Signature:</h4><div class="sigline"></div><small></small></div>
+        <div><h4>Principal Signature:</h4><div class="sigline"></div><small>${esc(SCHOOL.headTeacher)}</small></div>
+      </div>
+    </div>
+
+    <div class="rc-foot">
+      <span>${esc(SCHOOL.name)}</span>
+      <span>${esc(SCHOOL.address)}</span>
+      <span class="phone">${esc(SCHOOL.phone)}</span>
+      <span>${esc(SCHOOL.email)}</span>
+    </div>
+    <div class="rc-bar"></div>
+    <div class="rc-actions">
+      <span>${esc(s.name)} · ${esc(s.adm)}</span>
+      <button class="btn" type="button" data-print-one="${esc(s.adm)}">Print this card</button>
+    </div>
+  </article>`;
+}
+
+/* ---------- Show the chosen class and term ---------- */
+function showSelection(){
+  const form = $("formSel").value, term = $("termSel").value;
+  const viewer = $("viewer"), waiting = $("waiting");
+
+  if(!form || !term){
+    viewer.hidden = true;
+    waiting.hidden = false;
+    waiting.innerHTML = `<strong>No class or term chosen</strong>Choose a class and a term above to see its report cards.`;
+    return;
+  }
+
+  const batch = readReports().find(b => String(b.form) === form && b.term === term);
+  if(!batch){
+    viewer.hidden = true;
+    waiting.hidden = false;
+    waiting.innerHTML = `<strong>No results saved for Form ${form}, ${esc(term)} yet</strong>Enter the scores on the Grades page and press Save to reports. Then come back here.`;
+    return;
+  }
+
+  const cls = buildClass(batch);
+  waiting.hidden = true;
+  viewer.hidden = false;
+  $("viewTitle").textContent = `Form ${batch.form} · ${batch.term} report cards`;
+  $("viewMeta").textContent = `${cls.classSize} students · ${SCHOOL.academicYear}`;
+  $("cards").innerHTML = cls.students.map(s => reportCard(batch, s, cls)).join("");
+  viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ---------- Events ---------- */
+$("formSel").addEventListener("change", showSelection);
+$("termSel").addEventListener("change", showSelection);
+
+$("cards").addEventListener("click", e => {
+  const btn = e.target.closest("[data-print-one]");
+  if(!btn) return;
+  const card = btn.closest(".rc");
+  const others = [...document.querySelectorAll("#cards .rc")].filter(c => c !== card);
+  others.forEach(c => c.style.display = "none");
+  window.print();
+  others.forEach(c => c.style.display = "");
+});
+
+$("printAll").addEventListener("click", () => window.print());
+
+$("today").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+showSelection();
+</script>
+</body>
+</html>
